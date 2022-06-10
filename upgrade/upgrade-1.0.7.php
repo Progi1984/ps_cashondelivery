@@ -17,14 +17,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * @param Ps_Cashondelivery $module
+ * @return bool
+ */
 function upgrade_module_1_0_7($module)
 {
     $module->unregisterHook('paymentReturn');
-    $module->registerHook('displayPaymentReturn');
+    if (Hook::isHookCallableOn($module, 'displayPaymentReturn') || $module instanceof WidgetInterface) {
+        $module->registerHook('displayPaymentReturn');
+    }
 
     return true;
 }
